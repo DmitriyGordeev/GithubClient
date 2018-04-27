@@ -15,6 +15,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        editText_userEmail = (EditText) findViewById(R.id.editText_userEmail);
+        editText_userPassword = (EditText) findViewById(R.id.editText_userPassword);
     }
 
     public void onLoginClick(View view) {
