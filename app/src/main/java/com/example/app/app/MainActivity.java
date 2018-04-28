@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText editText_userEmail;
     private EditText editText_userPassword;
 
+    private boolean done = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +41,18 @@ public class MainActivity extends AppCompatActivity {
         editText_userEmail = (EditText) findViewById(R.id.editText_userEmail);
         editText_userPassword = (EditText) findViewById(R.id.editText_userPassword);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
-                "?client_id=" + clientId +
-                "&scope=repo&redirect_uri=" + authCallback));
+        Log.i("[onCreate]", "onCreate() before intent");
 
-        startActivity(intent);
+        if(!done) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
+                    "?client_id=" + clientId +
+                    "&scope=repo"));
+
+            startActivity(intent);
+            done = true;
+        }
+
+        Log.i("[onCreate]", "onCreate() after intent");
     }
 
     @Override
