@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     "?client_id=" + clientId +
                     "&scope=repo"));
 
+            Log.i("[onCreate()]", "startActivity()");
             startActivity(intent);
             done = true;
         }

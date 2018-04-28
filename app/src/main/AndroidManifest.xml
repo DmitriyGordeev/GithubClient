@@ -22,8 +22,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:host="testhubclient"
-                    android:scheme="callback"/>
+                    android:host="callback"
+                    android:scheme="testhubclient"/>
             </intent-filter>
         </activity>
     </application>
