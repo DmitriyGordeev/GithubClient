@@ -1,5 +1,7 @@
 package com.example.app.app;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +18,18 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText editText_userEmail;
-    private EditText editText_userPassword;
-
     private final String username = "dmitriygordeev";
     private final String base_url = "https://api.github.com/";
+
+    // TODO: move from here
+    private final String clientId = "35eb7d468f114aa2ad25";
+    private final String clientSecret = "f027bc9c9a2d0ba41e148d0f6274322b0500b742";
+    private final String authCallback = "testhubclient://callback";
+
+    private final String serviceUri = "https://github.com/login/oauth/authorize";
+
+    private EditText editText_userEmail;
+    private EditText editText_userPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,34 +39,11 @@ public class MainActivity extends AppCompatActivity {
         editText_userEmail = (EditText) findViewById(R.id.editText_userEmail);
         editText_userPassword = (EditText) findViewById(R.id.editText_userPassword);
 
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .addConverterFactory(GsonConverterFactory.create());
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
+                "?client_id=" + clientId +
+                "&scope=repo&redirect_uri=" + authCallback));
 
-        Retrofit retrofit = builder.build();
-        Client client = retrofit.create(Client.class);
-        Call<List<Repo>> call = client.repos(username);
-
-        Log.i("[logging]", "Here...");
-
-        call.enqueue(new Callback<List<Repo>>() {
-            @Override
-            public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
-                Log.i("[logging]", "onResponse()");
-
-                List<Repo> repos = response.body();
-                String repoNames = "";
-                for(Repo r : repos) {
-                    repoNames = repoNames.concat(r.getName() + "\n");
-                }
-                Log.i("[REPOS]", repoNames);
-            }
-
-            @Override
-            public void onFailure(Call<List<Repo>> call, Throwable throwable) {
-                Toast.makeText(MainActivity.this, "connection failure!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        startActivity(intent);
     }
 
     public void onLoginClick(View view) {
