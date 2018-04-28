@@ -66,6 +66,15 @@ public class MainActivity extends AppCompatActivity {
             final Client client = retrofit.create(Client.class);
             Call<AccessToken> accessTokenCall = client.getAccessToken(clientId, clientSecret, code);
 
+
+            Retrofit.Builder apiBuilder = new Retrofit.Builder()
+                    .baseUrl("https://api.github.com")
+                    .addConverterFactory(GsonConverterFactory.create());
+            Retrofit apiRetrofit = apiBuilder.build();
+            final Client apiClient = apiRetrofit.create(Client.class);
+
+
+
             accessTokenCall.enqueue(new Callback<AccessToken>() {
                 @Override
                 public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
@@ -83,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-            Call<List<Repo>> reposCall = client.repos(" Bearer " + accessToken);
+            Call<List<Repo>> reposCall = apiClient.repos("token " + accessToken);
             reposCall.enqueue(new Callback<List<Repo>>() {
                 @Override
                 public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
