@@ -31,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText editText_userEmail;
     private EditText editText_userPassword;
 
-    private boolean done = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,26 +39,23 @@ public class MainActivity extends AppCompatActivity {
         editText_userEmail = (EditText) findViewById(R.id.editText_userEmail);
         editText_userPassword = (EditText) findViewById(R.id.editText_userPassword);
 
-        Log.i("[onCreate]", "onCreate() before intent");
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
+                "?client_id=" + clientId +
+                "&scope=repo&redirect_uri=" + authCallback));
 
-        if(!done) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
-                    "?client_id=" + clientId +
-                    "&scope=repo"));
-
-            Log.i("[onCreate()]", "startActivity()");
-            startActivity(intent);
-            done = true;
-        }
-
-        Log.i("[onCreate]", "onCreate() after intent");
+        startActivity(intent);
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
         Uri uri = getIntent().getData();
+        Log.i("getIntent() == null", String.valueOf(getIntent() == null));
+        Log.i("uri == null ", String.valueOf(uri == null));
+        
+
         if(uri != null && uri.toString().startsWith(authCallback)) {
 
             String code = uri.getQueryParameter("code");
@@ -77,16 +72,19 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                     Toast.makeText(MainActivity.this, "Yep!", Toast.LENGTH_SHORT).show();
+                    Log.i("[RETROFIT RESULT]", "Success!");
                 }
 
                 @Override
                 public void onFailure(Call<AccessToken> call, Throwable throwable) {
                     Toast.makeText(MainActivity.this, "nope...", Toast.LENGTH_SHORT).show();
+                    Log.i("[RETROFIT RESULT]", "Failed!");
                 }
             });
         }
 
         Log.i("[onResume()]", "resumed");
+
     }
 
     public void onLoginClick(View view) {
