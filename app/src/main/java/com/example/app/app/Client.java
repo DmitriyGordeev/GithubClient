@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface Client {
 
-    @GET("/users/{user}/repos")
-    Call<List<Repo>> repos(@Path("user") String user);
+//    @GET("/users/{user}/repos")
+//    Call<List<Repo>> repos(@Path("user") String user);
 
     @Headers("Accept: application/json")
     @POST("login/oauth/access_token")
@@ -18,5 +18,9 @@ public interface Client {
             @Field("client_secret") String clientSecret,
             @Field("code") String code
     );
+
+    @GET("https://api.github.com/repos/user/repo")
+    @Headers({"Accept: application/json", "Authorization: token {token}"})
+    Call<List<Repo>> repos(@Path("token") String accessToken);
 
 }

@@ -14,6 +14,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private final String authCallback = "testhubclient://callback";
 
     private final String serviceUri = "https://github.com/login/oauth/authorize";
+
+    private String accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +63,37 @@ public class MainActivity extends AppCompatActivity {
                     .addConverterFactory(GsonConverterFactory.create());
 
             Retrofit retrofit = builder.build();
-            Client client = retrofit.create(Client.class);
+            final Client client = retrofit.create(Client.class);
             Call<AccessToken> accessTokenCall = client.getAccessToken(clientId, clientSecret, code);
 
             accessTokenCall.enqueue(new Callback<AccessToken>() {
                 @Override
                 public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                    Toast.makeText(MainActivity.this, "Yep!", Toast.LENGTH_SHORT).show();
-                    Log.i("[RETROFIT RESULT]", "Success!");
+                    AccessToken token = response.body();
+                    if(token != null) {
+                        accessToken = token.getAccessToken();
+
+                        Call<List<Repo>> reposCall = client.repos(accessToken);
+                        try {
+                            List<Repo> repos = reposCall.execute().body();
+                            String repoNames = "";
+
+                            for(Repo r : repos) {
+                                repoNames = repoNames.concat(r + "\n");
+                            }
+
+                            Log.i("[REPOS]", repoNames);
+                        }
+                        catch(IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<AccessToken> call, Throwable throwable) {
                     Toast.makeText(MainActivity.this, "nope...", Toast.LENGTH_SHORT).show();
-                    Log.i("[RETROFIT RESULT]", "Failed!");
                 }
             });
         }
