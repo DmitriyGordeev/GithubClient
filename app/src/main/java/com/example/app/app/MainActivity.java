@@ -39,6 +39,14 @@ public class MainActivity extends AppCompatActivity {
         editText_userEmail = (EditText) findViewById(R.id.editText_userEmail);
         editText_userPassword = (EditText) findViewById(R.id.editText_userPassword);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        final Intent intent = getIntent();
+//        Uri uri = intent.getData();
+
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
                 "?client_id=" + clientId +
                 "&scope=repo&redirect_uri=" + authCallback));
@@ -46,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
 
     @Override
     protected void onResume() {
