@@ -19,7 +19,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private final String username = "dmitriygordeev";
-    private final String base_url = "https://api.github.com/";
+    private final String base_url = "https://github.com/";
 
     // TODO: move from here
     private final String clientId = "35eb7d468f114aa2ad25";
@@ -44,6 +44,39 @@ public class MainActivity extends AppCompatActivity {
                 "&scope=repo&redirect_uri=" + authCallback));
 
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Uri uri = getIntent().getData();
+        if(uri != null && uri.toString().startsWith(authCallback)) {
+
+            String code = uri.getQueryParameter("code");
+
+            Retrofit.Builder builder = new Retrofit.Builder()
+                    .baseUrl(base_url)
+                    .addConverterFactory(GsonConverterFactory.create());
+
+            Retrofit retrofit = builder.build();
+            Client client = retrofit.create(Client.class);
+            Call<AccessToken> accessTokenCall = client.getAccessToken(clientId, clientSecret, code);
+
+            accessTokenCall.enqueue(new Callback<AccessToken>() {
+                @Override
+                public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+                    Toast.makeText(MainActivity.this, "Yep!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<AccessToken> call, Throwable throwable) {
+                    Toast.makeText(MainActivity.this, "nope...", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        Log.i("[onResume()]", "resumed");
     }
 
     public void onLoginClick(View view) {
