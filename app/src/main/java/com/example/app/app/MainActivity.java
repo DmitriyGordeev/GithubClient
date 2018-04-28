@@ -18,7 +18,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String username = "dmitriygordeev";
     private final String base_url = "https://github.com/";
 
     // TODO: move from here
@@ -28,16 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
     private final String serviceUri = "https://github.com/login/oauth/authorize";
 
-    private EditText editText_userEmail;
-    private EditText editText_userPassword;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        editText_userEmail = (EditText) findViewById(R.id.editText_userEmail);
-        editText_userPassword = (EditText) findViewById(R.id.editText_userPassword);
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
                 "?client_id=" + clientId +
@@ -57,10 +50,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         Uri uri = getIntent().getData();
-        Log.i("getIntent() == null", String.valueOf(getIntent() == null));
-        Log.i("uri == null ", String.valueOf(uri == null));
-        
-
         if(uri != null && uri.toString().startsWith(authCallback)) {
 
             String code = uri.getQueryParameter("code");
@@ -87,9 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
-        Log.i("[onResume()]", "resumed");
-
     }
 
     public void onLoginClick(View view) {
