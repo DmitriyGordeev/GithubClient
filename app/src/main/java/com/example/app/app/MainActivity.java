@@ -72,28 +72,45 @@ public class MainActivity extends AppCompatActivity {
                     AccessToken token = response.body();
                     if(token != null) {
                         accessToken = token.getAccessToken();
-
-                        Call<List<Repo>> reposCall = client.repos(accessToken);
-                        try {
-                            List<Repo> repos = reposCall.execute().body();
-                            String repoNames = "";
-
-                            for(Repo r : repos) {
-                                repoNames = repoNames.concat(r + "\n");
-                            }
-
-                            Log.i("[REPOS]", repoNames);
-                        }
-                        catch(IOException e) {
-                            e.printStackTrace();
-                        }
-
                     }
                 }
 
                 @Override
                 public void onFailure(Call<AccessToken> call, Throwable throwable) {
-                    Toast.makeText(MainActivity.this, "nope...", Toast.LENGTH_SHORT).show();
+                    // TODO: exit activity or show error text
+                }
+            });
+
+
+
+            Call<List<Repo>> reposCall = client.repos(" Bearer " + accessToken);
+            reposCall.enqueue(new Callback<List<Repo>>() {
+                @Override
+                public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
+
+                    if(response == null) {
+                        Log.i("REPOS", "response is null");
+                        return;
+                    }
+
+                    Log.i("response.message()", response.message() + " code = " + response.code());
+
+                    List<Repo> repos = response.body();
+                    if(repos == null) {
+                        Log.i("REPOS", "repos list is null");
+                        return;
+                    }
+
+                    String repoNames = "";
+                    for(Repo r : repos) {
+                        repoNames = repoNames.concat(r + "\n");
+                    }
+                    Log.i("[REPOS]", repoNames);
+                }
+
+                @Override
+                public void onFailure(Call<List<Repo>> call, Throwable throwable) {
+
                 }
             });
         }
