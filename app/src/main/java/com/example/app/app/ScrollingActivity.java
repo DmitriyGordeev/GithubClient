@@ -1,5 +1,6 @@
 package com.example.app.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -55,6 +56,9 @@ public class ScrollingActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Repo r = (Repo)adapterView.getItemAtPosition(i);
 
+                Intent intent = new Intent(ScrollingActivity.this, CommitsActivity.class);
+                intent.putExtra("Repo", r);
+                startActivity(intent);
             }
         });
 
