@@ -65,22 +65,19 @@ public class MainActivity extends AppCompatActivity {
             accessTokenCall.enqueue(new Callback<AccessToken>() {
                 @Override
                 public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                    AccessToken token = response.body();
-                    if(token != null) {
-                        Global.accessToken = token.getAccessToken();
 
-                        try {
-                            getRepositories();
-                        }
-                        catch(Exception e) {
-                            e.printStackTrace();
+                    if(response.isSuccessful()) {
+                        AccessToken token = response.body();
+                        if(token != null) {
+                            Global.accessToken = token.getAccessToken();
+                            startActivity(new Intent(MainActivity.this, ScrollingActivity.class));
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<AccessToken> call, Throwable throwable) {
-                    // TODO: exit activity or show error text
+                    // TODO: show error text or dialog
                 }
             });
 
@@ -133,8 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("[REPOS]", repoNames);
 
 
-                Intent intent = new Intent(MainActivity.this, ScrollingActivity.class);
-                startActivity(intent);
+
             }
 
             @Override
