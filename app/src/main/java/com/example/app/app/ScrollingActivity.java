@@ -65,6 +65,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
 
         try {
+            getUser();
             getRepositories();
         }
         catch(Exception e) {
@@ -114,6 +115,43 @@ public class ScrollingActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Repo>> call, Throwable throwable) {
+
+            }
+        });
+
+
+    }
+
+    private void getUser() throws Exception {
+
+        // TODO: create single common retrofit object for all connections:
+
+        Retrofit.Builder apiBuilder = new Retrofit.Builder()
+                .baseUrl("https://api.github.com")
+                .addConverterFactory(GsonConverterFactory.create());
+        Retrofit apiRetrofit = apiBuilder.build();
+        final Client apiClient = apiRetrofit.create(Client.class);
+
+
+        if(Global.accessToken == null) {
+            throw new Exception("accessToken is null");
+        }
+
+        Call<User> reposCall = apiClient.user(Global.accessToken);
+        reposCall.enqueue(new Callback<User>() {
+
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response != null && response.isSuccessful()) {
+
+                    //TODO: check for single user instance & relog
+                    Global.user = response.body();
+                    Log.i("[User]", Global.user.getName());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable throwable) {
 
             }
         });

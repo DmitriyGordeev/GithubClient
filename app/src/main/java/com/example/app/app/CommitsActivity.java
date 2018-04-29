@@ -17,6 +17,7 @@ import java.util.List;
 public class CommitsActivity extends AppCompatActivity {
 
     ListView listView_commits;
+    Repo repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +25,8 @@ public class CommitsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_commits);
 
         Intent intent = getIntent();
-        Repo r = (Repo)intent.getParcelableExtra("Repo");
-        if(r == null) {
+        repo = (Repo)intent.getParcelableExtra("Repo");
+        if(repo == null) {
             //!!!
         }
 
@@ -34,6 +35,15 @@ public class CommitsActivity extends AppCompatActivity {
                 R.layout.commit_listitem,
                 new ArrayList<Commit>());
         listView_commits.setAdapter(commitAdapter);
+
+
+        try {
+            getCommits();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -47,10 +57,15 @@ public class CommitsActivity extends AppCompatActivity {
 
 
         if(Global.accessToken == null) {
-            throw new Exception("accessToken is null");
+            throw new Exception("Global.accessToken is null");
         }
 
-        Call<List<Commit>> commitsCall = apiClient.commits(Global.accessToken);
+        if(Global.user == null) {
+            throw new Exception("Global.user is null");
+        }
+
+        Call<List<Commit>> commitsCall = apiClient.commits(repo.getName(), Global.accessToken);
+
         commitsCall.enqueue(new Callback<List<Commit>>() {
 
             @Override
@@ -61,12 +76,14 @@ public class CommitsActivity extends AppCompatActivity {
                     return;
                 }
                 Log.i("response.message()", response.message() + " code = " + response.code());
-                repositories = response.body();
+                List<Commit> commits = response.body();
+
+                Log.i("[commits.size()]", String.valueOf(commits.size()));
 
 
                 CommitAdapter commitAdapter = new CommitAdapter(CommitsActivity.this,
                         R.layout.commit_listitem,
-                        new ArrayList<Commit>());
+                        commits);
                 listView_commits.setAdapter(commitAdapter);
             }
 

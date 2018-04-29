@@ -28,10 +28,9 @@ public interface Client {
 
 
     @Headers("Accept: application/json")
-    @GET("repos/{owner}/{repo}/git/commits")
-    Call<List<Commit>> commits(@Query("access_token") String token,
-                               @Path("owner") String owner,
-                               @Path("repo") String repoName);
+    @GET("{commits_url}")
+    Call<List<Commit>> commits(@Path("commits_url") String commitsUrl,
+                               @Query("access_token") String token);
 
 
 }

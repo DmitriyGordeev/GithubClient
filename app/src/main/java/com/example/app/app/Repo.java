@@ -5,15 +5,21 @@ import android.os.Parcelable;
 
 public class Repo implements Parcelable {
 
-    public Repo(String name) {
+    private String name;
+    private String commitsUrl;
+
+    public Repo(String name, String commitsUrl) {
         this.name = name;
+        this.commitsUrl = commitsUrl;
     }
 
-    private String name;
-    public String getName() {return name;}
+    public String getName() { return this.name; }
+    public String getCommitsUrl() { return this.commitsUrl; }
+
 
     protected Repo(Parcel in) {
         name = in.readString();
+        commitsUrl = in.readString();
     }
 
     @Override
@@ -24,11 +30,11 @@ public class Repo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
+        dest.writeString(commitsUrl);
     }
 
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<Repo> CREATOR = new Parcelable.Creator<Repo>() {
-
         @Override
         public Repo createFromParcel(Parcel in) {
             return new Repo(in);
@@ -38,6 +44,5 @@ public class Repo implements Parcelable {
         public Repo[] newArray(int size) {
             return new Repo[size];
         }
-
     };
 }
