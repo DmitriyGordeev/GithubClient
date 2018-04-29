@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("[repositories.size()]", String.valueOf(repositories.size()));
                 String repoNames = "";
                 for(Repo r : repositories) {
-                    repoNames = repoNames.concat(r + "\n");
+                    repoNames = repoNames.concat(r.getName() + "\n");
                 }
                 Log.i("[REPOS]", repoNames);
             }
