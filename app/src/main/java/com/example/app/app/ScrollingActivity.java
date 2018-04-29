@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import retrofit2.Call;
@@ -46,6 +47,17 @@ public class ScrollingActivity extends AppCompatActivity {
         List<Repo> repos = new ArrayList<>();
         RepoAdapter repoAdapter = new RepoAdapter(ScrollingActivity.this, R.layout.repo_listitem, repos);
         listView_repos.setAdapter(repoAdapter);
+
+
+
+        listView_repos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Repo r = (Repo)adapterView.getItemAtPosition(i);
+
+            }
+        });
+
 
 
         try {
