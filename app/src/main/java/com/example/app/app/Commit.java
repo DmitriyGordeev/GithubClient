@@ -2,14 +2,14 @@ package com.example.app.app;
 
 public class Commit {
 
-    private String hash;
+    private String sha;
 
-    public Commit(String hash) {
-        this.hash = hash;
+    public Commit(String sha) {
+        this.sha = sha;
     }
 
-    public String getHash() {
-        return hash;
+    public String getSha() {
+        return sha;
     }
 
 }

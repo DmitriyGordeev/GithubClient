@@ -2,10 +2,13 @@ package com.example.app.app;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.google.gson.annotations.SerializedName;
 
 public class Repo implements Parcelable {
 
     private String name;
+
+    @SerializedName("commits_url")
     private String commitsUrl;
 
     public Repo(String name, String commitsUrl) {

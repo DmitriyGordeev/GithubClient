@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.ResponseBody;
 
 public class CommitsActivity extends AppCompatActivity {
 
@@ -64,36 +65,61 @@ public class CommitsActivity extends AppCompatActivity {
             throw new Exception("Global.user is null");
         }
 
-        Call<List<Commit>> commitsCall = apiClient.commits(repo.getName(), Global.accessToken);
 
-        commitsCall.enqueue(new Callback<List<Commit>>() {
+        String commitsUrl = repo.getCommitsUrl().replace("{/sha}", "");
+        commitsUrl = commitsUrl.replace("https://api.github.com", "");
 
+        Log.i("[commitsUrl]", commitsUrl);
+        // Call<List<Commit>> commitsCall = apiClient.commits(commitsUrl, Global.accessToken);
+
+//        commitsCall.enqueue(new Callback<List<Commit>>() {
+//
+//            @Override
+//            public void onResponse(Call<List<Commit>> call, Response<List<Commit>> response) {
+//
+//                if(response == null) {
+//                    Log.i("REPOS", "response is null");
+//                    return;
+//                }
+//                Log.i("response.message()", response.message() + " code = " + response.code());
+//                List<Commit> commits = response.body();
+//
+//                Log.i("[commits.size()]", String.valueOf(commits.size()));
+//
+//
+//                CommitAdapter commitAdapter = new CommitAdapter(CommitsActivity.this,
+//                        R.layout.commit_listitem,
+//                        commits);
+//                listView_commits.setAdapter(commitAdapter);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Commit>> call, Throwable throwable) {
+//
+//                // TODO: check is failure
+//            }
+//        });
+
+
+        Call<ResponseBody> commitsCall = apiClient.commitsRaw(Global.accessToken);
+        commitsCall.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<List<Commit>> call, Response<List<Commit>> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                if(response == null) {
-                    Log.i("REPOS", "response is null");
-                    return;
+                try {
+                    Log.i("RawResponse", response.body().string());
                 }
-                Log.i("response.message()", response.message() + " code = " + response.code());
-                List<Commit> commits = response.body();
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
 
-                Log.i("[commits.size()]", String.valueOf(commits.size()));
-
-
-                CommitAdapter commitAdapter = new CommitAdapter(CommitsActivity.this,
-                        R.layout.commit_listitem,
-                        commits);
-                listView_commits.setAdapter(commitAdapter);
             }
 
             @Override
-            public void onFailure(Call<List<Commit>> call, Throwable throwable) {
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
 
-                // TODO: check is failure
             }
         });
-
 
     }
 }

@@ -32,5 +32,10 @@ public interface Client {
     Call<List<Commit>> commits(@Path("commits_url") String commitsUrl,
                                @Query("access_token") String token);
 
+    @Headers("Accept: application/json")
+    @GET("/repos/DmitriyGordeev/algorithms/commits")
+    Call<okhttp3.ResponseBody> commitsRaw(
+                               @Query("access_token") String token);
+
 
 }
