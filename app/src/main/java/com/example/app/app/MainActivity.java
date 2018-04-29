@@ -82,11 +82,6 @@ public class MainActivity extends AppCompatActivity {
                         catch(Exception e) {
                             e.printStackTrace();
                         }
-
-                        if(repositories == null) {
-                            Log.i("[Error]", "repositories == null");
-                            return;
-                        }
                     }
                 }
 
@@ -131,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("REPOS", "response is null");
                     return;
                 }
-
                 Log.i("response.message()", response.message() + " code = " + response.code());
                 repositories = response.body();
 
