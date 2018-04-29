@@ -30,19 +30,12 @@ public class MainActivity extends AppCompatActivity {
 
     private final String serviceUri = "https://github.com/login/oauth/authorize";
 
-    private String accessToken;
     private List<Repo> repositories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
-                "?client_id=" + clientId +
-                "&scope=repo&redirect_uri=" + authCallback));
-
-        startActivity(intent);
     }
 
     @Override
@@ -74,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                     AccessToken token = response.body();
                     if(token != null) {
-                        accessToken = token.getAccessToken();
+                        Global.accessToken = token.getAccessToken();
 
                         try {
                             getRepositories();
@@ -93,12 +86,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
         }
     }
 
     public void onLoginClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
+                "?client_id=" + clientId +
+                "&scope=repo&redirect_uri=" + authCallback));
 
+        startActivity(intent);
     }
 
 
@@ -111,12 +107,12 @@ public class MainActivity extends AppCompatActivity {
         final Client apiClient = apiRetrofit.create(Client.class);
 
 
-        if(accessToken == null) {
+        if(Global.accessToken == null) {
             throw new Exception("accessToken is null");
         }
 
-        Call<List<Repo>> reposCall = apiClient.repos(accessToken);
-        Log.i("accessToken", accessToken);
+        Call<List<Repo>> reposCall = apiClient.repos(Global.accessToken);
+        Log.i("accessToken", Global.accessToken);
         reposCall.enqueue(new Callback<List<Repo>>() {
 
             @Override
@@ -135,6 +131,10 @@ public class MainActivity extends AppCompatActivity {
                     repoNames = repoNames.concat(r.getName() + "\n");
                 }
                 Log.i("[REPOS]", repoNames);
+
+
+                Intent intent = new Intent(MainActivity.this, ScrollingActivity.class);
+                startActivity(intent);
             }
 
             @Override
