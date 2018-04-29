@@ -25,13 +25,13 @@ import java.net.URL;
 import java.util.List;
 
 
-public class MovieAdapter extends ArrayAdapter<Repo> {
+public class RepoAdapter extends ArrayAdapter<Repo> {
 
     Context context;
     boolean rmMode;
     List<Repo> movies;
 
-    public MovieAdapter(Context context, int resource, List<Repo> items, boolean rmMode) {
+    public RepoAdapter(Context context, int resource, List<Repo> items, boolean rmMode) {
         super(context, resource, items);
         this.context = context;
 
@@ -47,45 +47,41 @@ public class MovieAdapter extends ArrayAdapter<Repo> {
         if(v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.listitem_movie, null);
+            v = vi.inflate(R.layout.repo_listitem, null);
         }
 
-        final Repo m = getItem(position);
-        if (m != null) {
+        final Repo r = getItem(position);
+        if (r != null) {
 
-            TextView tv_movieTitle = (TextView) v.findViewById(R.id.tv_movieTitle);
-            TextView tv_movieYear = (TextView) v.findViewById(R.id.tv_movieYear);
-            ImageView iv_moviePoster = (ImageView) v.findViewById(R.id.iv_moviePoster);
-            ImageButton btn_addToFavorites = (ImageButton) v.findViewById(R.id.btn_addToFavorites);
+            TextView textView_repoName = (TextView) v.findViewById(R.id.textView_repoName);
+            TextView textView_repoCommits = (TextView) v.findViewById(R.id.textView_repoCommits);
+            ImageView imageView_authorAvatar = (ImageView) v.findViewById(R.id.imageView_authorAvatar);
 
-            if(rmMode) {
-                btn_addToFavorites.setImageResource(android.R.drawable.ic_menu_delete);
+
+            if(textView_repoName != null) {
+                textView_repoName.setText(r.getName());
             }
 
-            if(tv_movieTitle != null) {
-                tv_movieTitle.setText(m.getTitle());
-            }
+//            if(textView_repoCommits != null) {
+//                textView_repoCommits.setText(m.getYear());
+//            }
 
-            if(tv_movieYear != null) {
-                tv_movieYear.setText(m.getYear());
-            }
-
-            if(btn_addToFavorites != null) {
-                btn_addToFavorites.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        if(rmMode) {
-                            movies.remove(position);
-                            notifyDataSetChanged();
-                            Toast.makeText(context, "Удалено из избранного", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(context, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
+//            if(btn_addToFavorites != null) {
+//                btn_addToFavorites.setOnClickListener(new View.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(View view) {
+//                        if(rmMode) {
+//                            movies.remove(position);
+//                            notifyDataSetChanged();
+//                            Toast.makeText(context, "Удалено из избранного", Toast.LENGTH_SHORT).show();
+//                        }
+//                        else {
+//                            Toast.makeText(context, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+//            }
 
         }
 
