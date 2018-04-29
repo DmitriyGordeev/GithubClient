@@ -27,13 +27,13 @@ import java.util.List;
 
 public class RepoAdapter extends ArrayAdapter<Repo> {
 
-    Context context;
-    List<Repo> repositories;
+    private Context context;
+    private List<Repo> items;
 
     public RepoAdapter(Context context, int resource, List<Repo> items) {
         super(context, resource, items);
         this.context = context;
-        repositories = items;
+        this.items = items;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class RepoAdapter extends ArrayAdapter<Repo> {
         if(v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.repo_listitem, null);
+            v = vi.inflate(R.layout.repo_listitem, parent, false);
         }
 
         final Repo r = getItem(position);
@@ -54,32 +54,9 @@ public class RepoAdapter extends ArrayAdapter<Repo> {
             TextView textView_repoCommits = (TextView) v.findViewById(R.id.textView_repoCommits);
             ImageView imageView_authorAvatar = (ImageView) v.findViewById(R.id.imageView_authorAvatar);
 
-
             if(textView_repoName != null) {
                 textView_repoName.setText(r.getName());
             }
-
-//            if(textView_repoCommits != null) {
-//                textView_repoCommits.setText(m.getYear());
-//            }
-
-//            if(btn_addToFavorites != null) {
-//                btn_addToFavorites.setOnClickListener(new View.OnClickListener() {
-//
-//                    @Override
-//                    public void onClick(View view) {
-//                        if(rmMode) {
-//                            movies.remove(position);
-//                            notifyDataSetChanged();
-//                            Toast.makeText(context, "Удалено из избранного", Toast.LENGTH_SHORT).show();
-//                        }
-//                        else {
-//                            Toast.makeText(context, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//            }
-
         }
 
         return v;
