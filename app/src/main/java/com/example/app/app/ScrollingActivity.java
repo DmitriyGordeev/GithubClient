@@ -6,9 +6,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class ScrollingActivity extends AppCompatActivity {
+
+    private ListView listView_repos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,5 +28,10 @@ public class ScrollingActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        View scrollView = (View)findViewById(R.id.scroll_view);
+        listView_repos = (ListView)scrollView.findViewById(R.id.listView_repos);
+
     }
 }
