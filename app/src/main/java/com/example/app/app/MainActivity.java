@@ -95,50 +95,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void getRepositories() throws Exception {
 
-        Retrofit.Builder apiBuilder = new Retrofit.Builder()
-                .baseUrl("https://api.github.com")
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit apiRetrofit = apiBuilder.build();
-        final Client apiClient = apiRetrofit.create(Client.class);
-
-
-        if(Global.accessToken == null) {
-            throw new Exception("accessToken is null");
-        }
-
-        Call<List<Repo>> reposCall = apiClient.repos(Global.accessToken);
-        Log.i("accessToken", Global.accessToken);
-        reposCall.enqueue(new Callback<List<Repo>>() {
-
-            @Override
-            public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
-
-                if(response == null) {
-                    Log.i("REPOS", "response is null");
-                    return;
-                }
-                Log.i("response.message()", response.message() + " code = " + response.code());
-                repositories = response.body();
-
-                Log.i("[repositories.size()]", String.valueOf(repositories.size()));
-                String repoNames = "";
-                for(Repo r : repositories) {
-                    repoNames = repoNames.concat(r.getName() + "\n");
-                }
-                Log.i("[REPOS]", repoNames);
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Repo>> call, Throwable throwable) {
-
-            }
-        });
-
-
-    }
 }

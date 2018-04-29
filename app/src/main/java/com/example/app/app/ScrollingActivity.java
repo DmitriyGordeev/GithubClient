@@ -5,15 +5,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ScrollingActivity extends AppCompatActivity {
 
     private ListView listView_repos;
+    private List<Repo> repositories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,23 +43,65 @@ public class ScrollingActivity extends AppCompatActivity {
         View scrollView = (View)findViewById(R.id.scroll_view);
         listView_repos = (ListView)scrollView.findViewById(R.id.listView_repos);
 
-        ArrayList<Repo> repos = new ArrayList<>();
-        repos.add(new Repo("Repo 1"));
-        repos.add(new Repo("Repo 2"));
-        repos.add(new Repo("Repo 3"));
-        repos.add(new Repo("Repo 1"));
-        repos.add(new Repo("Repo 2"));
-        repos.add(new Repo("Repo 3"));
-        repos.add(new Repo("Repo 1"));
-        repos.add(new Repo("Repo 2"));
-        repos.add(new Repo("Repo 3"));
-        repos.add(new Repo("Repo 1"));
-        repos.add(new Repo("Repo 2"));
-        repos.add(new Repo("Repo 3"));
-
-
-        RepoAdapter repoAdapter = new RepoAdapter(this, R.layout.repo_listitem, repos);
+        List<Repo> repos = new ArrayList<>();
+        RepoAdapter repoAdapter = new RepoAdapter(ScrollingActivity.this, R.layout.repo_listitem, repos);
         listView_repos.setAdapter(repoAdapter);
+
+
+        try {
+            getRepositories();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getRepositories() throws Exception {
+
+        Retrofit.Builder apiBuilder = new Retrofit.Builder()
+                .baseUrl("https://api.github.com")
+                .addConverterFactory(GsonConverterFactory.create());
+        Retrofit apiRetrofit = apiBuilder.build();
+        final Client apiClient = apiRetrofit.create(Client.class);
+
+
+        if(Global.accessToken == null) {
+            throw new Exception("accessToken is null");
+        }
+
+        Call<List<Repo>> reposCall = apiClient.repos(Global.accessToken);
+        Log.i("accessToken", Global.accessToken);
+        reposCall.enqueue(new Callback<List<Repo>>() {
+
+            @Override
+            public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
+
+                if(response == null) {
+                    Log.i("REPOS", "response is null");
+                    return;
+                }
+                Log.i("response.message()", response.message() + " code = " + response.code());
+                repositories = response.body();
+
+                Log.i("[repositories.size()]", String.valueOf(repositories.size()));
+                String repoNames = "";
+                for(Repo r : repositories) {
+                    repoNames = repoNames.concat(r.getName() + "\n");
+                }
+                Log.i("[REPOS]", repoNames);
+
+
+
+                RepoAdapter repoAdapter = new RepoAdapter(ScrollingActivity.this, R.layout.repo_listitem, repositories);
+                listView_repos.setAdapter(repoAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Repo>> call, Throwable throwable) {
+
+            }
+        });
+
 
     }
 }
