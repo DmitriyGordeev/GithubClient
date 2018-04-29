@@ -21,8 +21,8 @@ public interface Client {
 
 
 //    @Headers("Accept: application/json", "Authorization: token {token}"})
-    @GET("user/repos")
     @Headers("Accept: application/json")
-    Call<List<Repo>> repos(@Header("Authorization") String authHeaderValue);
+    @GET("user/repos")
+    Call<List<Repo>> repos(@Query("access_token") String token);
 
 }
