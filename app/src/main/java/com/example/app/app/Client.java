@@ -28,13 +28,15 @@ public interface Client {
 
 
     @Headers("Accept: application/json")
-    @GET("{commits_url}")
-    Call<List<Commit>> commits(@Path("commits_url") String commitsUrl,
+    @GET("/repos/{owner}/{repo_name}/commits")
+    Call<List<Commit>> commits(@Path("owner") String owner,
+                               @Path("repo_name") String repoName,
                                @Query("access_token") String token);
 
     @Headers("Accept: application/json")
-    @GET("/repos/DmitriyGordeev/algorithms/commits")
-    Call<okhttp3.ResponseBody> commitsRaw(
+    @GET("/repos/{owner}/{repo_name}/commits")
+    Call<okhttp3.ResponseBody> commitsRaw(@Path("owner") String owner,
+                               @Path("repo_name") String repoName,
                                @Query("access_token") String token);
 
 
