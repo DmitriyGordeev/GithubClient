@@ -7,9 +7,6 @@ import java.util.List;
 
 public interface Client {
 
-//    @GET("/users/{user}/repos")
-//    Call<List<Repo>> repos(@Path("user") String user);
-
     @Headers("Accept: application/json")
     @POST("login/oauth/access_token")
     @FormUrlEncoded
@@ -20,9 +17,21 @@ public interface Client {
     );
 
 
-//    @Headers("Accept: application/json", "Authorization: token {token}"})
+    @Headers("Accept: application/json")
+    @GET("user")
+    Call<User> user(@Query("access_token") String token);
+
+
     @Headers("Accept: application/json")
     @GET("user/repos")
     Call<List<Repo>> repos(@Query("access_token") String token);
+
+
+    @Headers("Accept: application/json")
+    @GET("repos/{owner}/{repo}/git/commits")
+    Call<List<Commit>> commits(@Query("access_token") String token,
+                               @Path("owner") String owner,
+                               @Path("repo") String repoName);
+
 
 }
