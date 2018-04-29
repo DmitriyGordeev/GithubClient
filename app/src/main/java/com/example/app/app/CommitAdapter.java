@@ -38,6 +38,7 @@ public class CommitAdapter extends ArrayAdapter<Commit> {
         if (commit != null) {
 
             TextView textView_commitHash = (TextView) v.findViewById(R.id.textView_commitHash);
+            TextView textView_commitMessage = (TextView) v.findViewById(R.id.textView_commitMessage);
 
             if(textView_commitHash != null) {
                 String sha = commit.getSha();
@@ -47,6 +48,8 @@ public class CommitAdapter extends ArrayAdapter<Commit> {
 
                 textView_commitHash.setText(sha);
             }
+
+            textView_commitMessage.setText(commit.getCommit().getMessage());
         }
 
         return v;
