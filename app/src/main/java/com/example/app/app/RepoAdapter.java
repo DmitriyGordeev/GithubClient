@@ -28,15 +28,12 @@ import java.util.List;
 public class RepoAdapter extends ArrayAdapter<Repo> {
 
     Context context;
-    boolean rmMode;
-    List<Repo> movies;
+    List<Repo> repositories;
 
-    public RepoAdapter(Context context, int resource, List<Repo> items, boolean rmMode) {
+    public RepoAdapter(Context context, int resource, List<Repo> items) {
         super(context, resource, items);
         this.context = context;
-
-        this.rmMode = rmMode;
-        movies = items;
+        repositories = items;
     }
 
     @Override

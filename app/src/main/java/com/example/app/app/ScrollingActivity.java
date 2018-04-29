@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class ScrollingActivity extends AppCompatActivity {
 
     private ListView listView_repos;
@@ -32,6 +34,24 @@ public class ScrollingActivity extends AppCompatActivity {
 
         View scrollView = (View)findViewById(R.id.scroll_view);
         listView_repos = (ListView)scrollView.findViewById(R.id.listView_repos);
+
+        ArrayList<Repo> repos = new ArrayList<>();
+        repos.add(new Repo("Repo 1"));
+        repos.add(new Repo("Repo 2"));
+        repos.add(new Repo("Repo 3"));
+        repos.add(new Repo("Repo 1"));
+        repos.add(new Repo("Repo 2"));
+        repos.add(new Repo("Repo 3"));
+        repos.add(new Repo("Repo 1"));
+        repos.add(new Repo("Repo 2"));
+        repos.add(new Repo("Repo 3"));
+        repos.add(new Repo("Repo 1"));
+        repos.add(new Repo("Repo 2"));
+        repos.add(new Repo("Repo 3"));
+
+
+        RepoAdapter repoAdapter = new RepoAdapter(this, R.layout.repo_listitem, repos);
+        listView_repos.setAdapter(repoAdapter);
 
     }
 }
