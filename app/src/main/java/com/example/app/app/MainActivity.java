@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             Call<List<Repo>> reposCall = apiClient.repos(accessToken);
-            Log.i("check accessToken: ", accessToken);
+            Log.i("accessToken == null", String.valueOf(accessToken == null));
             reposCall.enqueue(new Callback<List<Repo>>() {
                 @Override
                 public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
