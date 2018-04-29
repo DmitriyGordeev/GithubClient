@@ -40,7 +40,12 @@ public class CommitAdapter extends ArrayAdapter<Commit> {
             TextView textView_commitHash = (TextView) v.findViewById(R.id.textView_commitHash);
 
             if(textView_commitHash != null) {
-                textView_commitHash.setText(commit.getSha());
+                String sha = commit.getSha();
+                if(sha.length() > 7) {
+                    sha = sha.substring(0, 6);
+                }
+
+                textView_commitHash.setText(sha);
             }
         }
 

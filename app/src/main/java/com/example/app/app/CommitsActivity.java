@@ -73,15 +73,9 @@ public class CommitsActivity extends AppCompatActivity {
             public void onResponse(Call<List<Commit>> call, Response<List<Commit>> response) {
 
                 if(response == null) {
-                    Log.i("REPOS", "response is null");
                     return;
                 }
-                Log.i("response.message()", response.message() + " code = " + response.code());
                 List<Commit> commits = response.body();
-
-                Log.i("[commits.size()]", String.valueOf(commits.size()));
-
-
                 CommitAdapter commitAdapter = new CommitAdapter(CommitsActivity.this,
                         R.layout.commit_listitem,
                         commits);
@@ -94,28 +88,5 @@ public class CommitsActivity extends AppCompatActivity {
                 // TODO: check is failure
             }
         });
-
-
-//        Call<ResponseBody> commitsCall =
-//                apiClient.commitsRaw(Global.user.getLogin(), repo.getName(), Global.accessToken);
-//        commitsCall.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                try {
-//                    Log.i("RawResponse", response.body().string());
-//                }
-//                catch(Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-//
-//            }
-//        });
-
     }
 }
