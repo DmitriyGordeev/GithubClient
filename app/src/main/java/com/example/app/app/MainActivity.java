@@ -16,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOError;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private final String serviceUri = "https://github.com/login/oauth/authorize";
 
     private String accessToken;
+    private List<Repo> repositories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,20 +69,24 @@ public class MainActivity extends AppCompatActivity {
             Call<AccessToken> accessTokenCall = client.getAccessToken(clientId, clientSecret, code);
 
 
-            Retrofit.Builder apiBuilder = new Retrofit.Builder()
-                    .baseUrl("https://api.github.com")
-                    .addConverterFactory(GsonConverterFactory.create());
-            Retrofit apiRetrofit = apiBuilder.build();
-            final Client apiClient = apiRetrofit.create(Client.class);
-
-
-
             accessTokenCall.enqueue(new Callback<AccessToken>() {
                 @Override
                 public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                     AccessToken token = response.body();
                     if(token != null) {
                         accessToken = token.getAccessToken();
+
+                        try {
+                            getRepositories();
+                        }
+                        catch(Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        if(repositories == null) {
+                            Log.i("[Error]", "repositories == null");
+                            return;
+                        }
                     }
                 }
 
@@ -92,41 +98,57 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-            Call<List<Repo>> reposCall = apiClient.repos(accessToken);
-            Log.i("accessToken == null", String.valueOf(accessToken == null));
-            reposCall.enqueue(new Callback<List<Repo>>() {
-                @Override
-                public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
 
-                    if(response == null) {
-                        Log.i("REPOS", "response is null");
-                        return;
-                    }
-
-                    Log.i("response.message()", response.message() + " code = " + response.code());
-
-                    List<Repo> repos = response.body();
-                    if(repos == null) {
-                        Log.i("REPOS", "repos list is null");
-                        return;
-                    }
-
-                    String repoNames = "";
-                    for(Repo r : repos) {
-                        repoNames = repoNames.concat(r + "\n");
-                    }
-                    Log.i("[REPOS]", repoNames);
-                }
-
-                @Override
-                public void onFailure(Call<List<Repo>> call, Throwable throwable) {
-
-                }
-            });
         }
     }
 
     public void onLoginClick(View view) {
+
+    }
+
+
+    private void getRepositories() throws Exception {
+
+        Retrofit.Builder apiBuilder = new Retrofit.Builder()
+                .baseUrl("https://api.github.com")
+                .addConverterFactory(GsonConverterFactory.create());
+        Retrofit apiRetrofit = apiBuilder.build();
+        final Client apiClient = apiRetrofit.create(Client.class);
+
+
+        if(accessToken == null) {
+            throw new Exception("accessToken is null");
+        }
+
+        Call<List<Repo>> reposCall = apiClient.repos(accessToken);
+        Log.i("accessToken", accessToken);
+        reposCall.enqueue(new Callback<List<Repo>>() {
+
+            @Override
+            public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
+
+                if(response == null) {
+                    Log.i("REPOS", "response is null");
+                    return;
+                }
+
+                Log.i("response.message()", response.message() + " code = " + response.code());
+                repositories = response.body();
+
+                Log.i("[repositories.size()]", String.valueOf(repositories.size()));
+                String repoNames = "";
+                for(Repo r : repositories) {
+                    repoNames = repoNames.concat(r + "\n");
+                }
+                Log.i("[REPOS]", repoNames);
+            }
+
+            @Override
+            public void onFailure(Call<List<Repo>> call, Throwable throwable) {
+
+            }
+        });
+
 
     }
 }
