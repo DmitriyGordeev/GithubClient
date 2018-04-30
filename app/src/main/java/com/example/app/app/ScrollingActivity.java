@@ -60,6 +60,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private ListView listView_repos;
     private List<Repo> repositories;
+    Client apiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,12 @@ public class ScrollingActivity extends AppCompatActivity {
 
         itemClickListener();
 
+        Retrofit.Builder apiBuilder = new Retrofit.Builder()
+                .baseUrl("https://api.github.com")
+                .addConverterFactory(GsonConverterFactory.create());
+        Retrofit apiRetrofit = apiBuilder.build();
+        apiClient = apiRetrofit.create(Client.class);
+
         try {
             // async processes
             getUser();
@@ -88,13 +95,6 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private void getRepositories() throws Exception {
 
-        Retrofit.Builder apiBuilder = new Retrofit.Builder()
-                .baseUrl("https://api.github.com")
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit apiRetrofit = apiBuilder.build();
-        final Client apiClient = apiRetrofit.create(Client.class);
-
-
         if(Global.accessToken == null) {
             throw new Exception("accessToken is null");
         }
@@ -106,45 +106,21 @@ public class ScrollingActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
 
-                if(response == null) {
-                    Log.i("REPOS", "response is null");
-                    return;
-                }
-                Log.i("response.message()", response.message() + " code = " + response.code());
                 repositories = response.body();
-
-                Log.i("[repositories.size()]", String.valueOf(repositories.size()));
-                String repoNames = "";
-                for(Repo r : repositories) {
-                    repoNames = repoNames.concat(r.getName() + "\n");
+                if(repositories != null) {
+                    RepoAdapter repoAdapter = new RepoAdapter(ScrollingActivity.this, R.layout.repo_listitem, repositories);
+                    listView_repos.setAdapter(repoAdapter);
                 }
-                Log.i("[REPOS]", repoNames);
-
-
-
-                RepoAdapter repoAdapter = new RepoAdapter(ScrollingActivity.this, R.layout.repo_listitem, repositories);
-                listView_repos.setAdapter(repoAdapter);
             }
 
             @Override
-            public void onFailure(Call<List<Repo>> call, Throwable throwable) {
-
-            }
+            public void onFailure(Call<List<Repo>> call, Throwable throwable) { }
         });
 
 
     }
 
     private void getUser() throws Exception {
-
-        // TODO: create single common retrofit object for all connections:
-
-        Retrofit.Builder apiBuilder = new Retrofit.Builder()
-                .baseUrl("https://api.github.com")
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit apiRetrofit = apiBuilder.build();
-        final Client apiClient = apiRetrofit.create(Client.class);
-
 
         if(Global.accessToken == null) {
             throw new Exception("accessToken is null");
