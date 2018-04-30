@@ -151,9 +151,11 @@ public class ScrollingActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Repo r = (Repo)adapterView.getItemAtPosition(i);
 
-                Intent intent = new Intent(ScrollingActivity.this, CommitsActivity.class);
-                intent.putExtra("Repo", r);
-                startActivity(intent);
+                if(r != null) {
+                    Intent intent = new Intent(ScrollingActivity.this, CommitsActivity.class);
+                    intent.putExtra("Repo", r);
+                    startActivity(intent);
+                }
             }
         });
     }

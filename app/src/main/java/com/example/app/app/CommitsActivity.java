@@ -27,9 +27,7 @@ public class CommitsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         repo = (Repo)intent.getParcelableExtra("Repo");
-        if(repo == null) {
-            //!!!
-        }
+
 
         listView_commits = (ListView) findViewById(R.id.listView_commits);
         CommitAdapter commitAdapter = new CommitAdapter(this,
@@ -72,9 +70,6 @@ public class CommitsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Commit>> call, Response<List<Commit>> response) {
 
-                if(response == null) {
-                    return;
-                }
                 List<Commit> commits = response.body();
                 CommitAdapter commitAdapter = new CommitAdapter(CommitsActivity.this,
                         R.layout.commit_listitem,
@@ -84,8 +79,6 @@ public class CommitsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Commit>> call, Throwable throwable) {
-
-                // TODO: check is failure
             }
         });
     }
