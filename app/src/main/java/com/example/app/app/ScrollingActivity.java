@@ -56,8 +56,6 @@ class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 }
 
 
-
-
 public class ScrollingActivity extends AppCompatActivity {
 
     private ListView listView_repos;
@@ -67,17 +65,6 @@ public class ScrollingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
 
         View scrollView = (View)findViewById(R.id.scroll_view);
@@ -87,22 +74,10 @@ public class ScrollingActivity extends AppCompatActivity {
         RepoAdapter repoAdapter = new RepoAdapter(ScrollingActivity.this, R.layout.repo_listitem, repos);
         listView_repos.setAdapter(repoAdapter);
 
-
-
-        listView_repos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Repo r = (Repo)adapterView.getItemAtPosition(i);
-
-                Intent intent = new Intent(ScrollingActivity.this, CommitsActivity.class);
-                intent.putExtra("Repo", r);
-                startActivity(intent);
-            }
-        });
-
-
+        itemClickListener();
 
         try {
+            // async processes
             getUser();
             getRepositories();
         }
@@ -181,28 +156,42 @@ public class ScrollingActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response != null && response.isSuccessful()) {
-
-                    //TODO: check for single user instance & relog
-                    Global.user = response.body();
-                    Log.i("[User]", Global.user.getName());
-
-                    // todo: setupUser()
-                    TextView textView_username = (TextView) findViewById(R.id.textView_username);
-                    textView_username.setText(Global.user.getLogin());
-                    ImageView imageView_avatar = (ImageView) findViewById(R.id.imageView_avatar);
-                    ((TextView) findViewById(R.id.textView_followers)).setText("Followers " + Global.user.getFollowers());
-
-                    ImageDownloader imageDownloader = new ImageDownloader(imageView_avatar);
-                    imageDownloader.execute(Global.user.getAvatarUrl());
+                    setupUser(response);
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable throwable) {
-
+                Toast.makeText(ScrollingActivity.this, "Unable to get user information", Toast.LENGTH_SHORT).show();
             }
         });
 
 
+    }
+
+    private void itemClickListener() {
+        listView_repos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Repo r = (Repo)adapterView.getItemAtPosition(i);
+
+                Intent intent = new Intent(ScrollingActivity.this, CommitsActivity.class);
+                intent.putExtra("Repo", r);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setupUser(Response<User> response) {
+        Global.user = response.body();
+
+        TextView textView_username = (TextView) findViewById(R.id.textView_username);
+        ImageView imageView_avatar = (ImageView) findViewById(R.id.imageView_avatar);
+        ((TextView) findViewById(R.id.textView_followers)).setText("Followers " + Global.user.getFollowers());
+
+        textView_username.setText(Global.user.getLogin());
+
+        ImageDownloader imageDownloader = new ImageDownloader(imageView_avatar);
+        imageDownloader.execute(Global.user.getAvatarUrl());
     }
 }
