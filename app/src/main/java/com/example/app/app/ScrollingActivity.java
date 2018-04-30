@@ -1,6 +1,9 @@
 package com.example.app.app;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,8 +18,45 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+
+class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
+
+    ImageView imageView;
+
+    public ImageDownloader(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
+    @Override
+    protected Bitmap doInBackground(String... urls) {
+        Bitmap bitmap = null;
+
+        try {
+            InputStream input = new URL(urls[0]).openStream();
+            bitmap = BitmapFactory.decodeStream(input);
+            input.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
+    }
+
+    @Override
+    protected void onPostExecute(Bitmap image) {
+        imageView.setImageBitmap(image);
+    }
+}
+
+
+
 
 public class ScrollingActivity extends AppCompatActivity {
 
@@ -150,6 +190,9 @@ public class ScrollingActivity extends AppCompatActivity {
                     TextView textView_username = (TextView) findViewById(R.id.textView_username);
                     textView_username.setText(Global.user.getLogin());
                     ImageView imageView_avatar = (ImageView) findViewById(R.id.imageView_avatar);
+
+                    ImageDownloader imageDownloader = new ImageDownloader(imageView_avatar);
+                    imageDownloader.execute(Global.user.getAvatarUrl());
                 }
             }
 
