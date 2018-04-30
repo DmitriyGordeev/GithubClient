@@ -39,6 +39,8 @@ public class CommitAdapter extends ArrayAdapter<Commit> {
 
             TextView textView_commitHash = (TextView) v.findViewById(R.id.textView_commitHash);
             TextView textView_commitMessage = (TextView) v.findViewById(R.id.textView_commitMessage);
+            TextView textView_committer = (TextView) v.findViewById(R.id.textView_committer);
+            TextView textView_commitDate = (TextView) v.findViewById(R.id.textView_commitDate);
 
             if(textView_commitHash != null) {
                 String sha = commit.getSha();
@@ -50,6 +52,9 @@ public class CommitAdapter extends ArrayAdapter<Commit> {
             }
 
             textView_commitMessage.setText(commit.getCommit().getMessage());
+            textView_committer.setText(commit.getCommit().getCommiter().getName());
+            textView_commitDate.setText(commit.getCommit().getCommiter().getDate());
+
         }
 
         return v;

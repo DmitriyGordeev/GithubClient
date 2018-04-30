@@ -22,5 +22,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView_commitMessage"
                 tools:layout_editor_absoluteY="43dp" android:paddingLeft="10dp" android:paddingTop="5dp"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" android:id="@+id/textView_committer" android:layout_weight="1"
+                    android:paddingLeft="10dp" android:paddingTop="10dp"/>
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" android:id="@+id/textView_commitDate" android:layout_weight="1"
+                    android:gravity="right" android:paddingRight="20dp" android:paddingTop="10dp"/>
+        </LinearLayout>
     </android.widget.LinearLayout>
 </android.widget.LinearLayout>
