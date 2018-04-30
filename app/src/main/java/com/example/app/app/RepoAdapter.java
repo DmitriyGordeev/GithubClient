@@ -51,11 +51,15 @@ public class RepoAdapter extends ArrayAdapter<Repo> {
         if (r != null) {
 
             TextView textView_repoName = (TextView) v.findViewById(R.id.textView_repoName);
-            TextView textView_repoCommits = (TextView) v.findViewById(R.id.textView_repoCommits);
+            TextView textView_private= (TextView) v.findViewById(R.id.textView_description);
             ImageView imageView_authorAvatar = (ImageView) v.findViewById(R.id.imageView_authorAvatar);
 
             if(textView_repoName != null) {
                 textView_repoName.setText(r.getName());
+            }
+
+            if(textView_private != null) {
+                textView_private.setText(r.isPrivate() ? "private repository" : "public repository");
             }
         }
 

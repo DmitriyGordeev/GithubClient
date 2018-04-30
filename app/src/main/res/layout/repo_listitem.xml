@@ -35,7 +35,7 @@
             <TextView
                     android:text="TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/textView_repoCommits" android:padding="10dp"/>
+                    android:layout_height="wrap_content" android:id="@+id/textView_description" android:padding="10dp"/>
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </android.widget.LinearLayout>
