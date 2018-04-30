@@ -190,6 +190,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     TextView textView_username = (TextView) findViewById(R.id.textView_username);
                     textView_username.setText(Global.user.getLogin());
                     ImageView imageView_avatar = (ImageView) findViewById(R.id.imageView_avatar);
+                    ((TextView) findViewById(R.id.textView_followers)).setText("Followers " + Global.user.getFollowers());
 
                     ImageDownloader imageDownloader = new ImageDownloader(imageView_avatar);
                     imageDownloader.execute(Global.user.getAvatarUrl());
