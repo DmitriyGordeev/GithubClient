@@ -1,7 +1,11 @@
 package com.example.app.app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private final String authCallback = "testhubclient://callback";
 
     private final String serviceUri = "https://github.com/login/oauth/authorize";
-
-    private List<Repo> repositories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             final Client client = retrofit.create(Client.class);
             Call<AccessToken> accessTokenCall = client.getAccessToken(clientId, clientSecret, code);
 
-
+            // async task connection
             accessTokenCall.enqueue(new Callback<AccessToken>() {
                 @Override
                 public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
@@ -77,21 +79,28 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<AccessToken> call, Throwable throwable) {
-                    // TODO: show error text or dialog
+                    Toast.makeText(MainActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
                 }
             });
-
-
 
         }
     }
 
     public void onLoginClick(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
-                "?client_id=" + clientId +
-                "&scope=repo&redirect_uri=" + authCallback));
 
-        startActivity(intent);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        if(netInfo != null && netInfo.isConnectedOrConnecting()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceUri +
+                    "?client_id=" + clientId +
+                    "&scope=repo&redirect_uri=" + authCallback));
+
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
