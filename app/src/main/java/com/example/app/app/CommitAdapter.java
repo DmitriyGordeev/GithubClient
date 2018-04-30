@@ -43,7 +43,7 @@ public class CommitAdapter extends ArrayAdapter<Commit> {
             if(textView_commitHash != null) {
                 String sha = commit.getSha();
                 if(sha.length() > 7) {
-                    sha = sha.substring(0, 6);
+                    sha = sha.substring(0, 7);
                 }
 
                 textView_commitHash.setText(sha);
