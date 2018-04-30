@@ -8,9 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,8 +27,8 @@ public class ScrollingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +145,11 @@ public class ScrollingActivity extends AppCompatActivity {
                     //TODO: check for single user instance & relog
                     Global.user = response.body();
                     Log.i("[User]", Global.user.getName());
+
+                    // todo: setupUser()
+                    TextView textView_username = (TextView) findViewById(R.id.textView_username);
+                    textView_username.setText(Global.user.getLogin());
+                    ImageView imageView_avatar = (ImageView) findViewById(R.id.imageView_avatar);
                 }
             }
 
