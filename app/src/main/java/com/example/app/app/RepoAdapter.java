@@ -52,7 +52,6 @@ public class RepoAdapter extends ArrayAdapter<Repo> {
 
             TextView textView_repoName = (TextView) v.findViewById(R.id.textView_repoName);
             TextView textView_private= (TextView) v.findViewById(R.id.textView_description);
-            ImageView imageView_authorAvatar = (ImageView) v.findViewById(R.id.imageView_authorAvatar);
 
             if(textView_repoName != null) {
                 textView_repoName.setText(r.getName());
